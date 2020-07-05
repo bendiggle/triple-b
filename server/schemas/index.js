@@ -2,39 +2,39 @@ const { gql } = require('apollo-server');
 
 const typeDefs = gql`
     type User {
-        id: Int!
+        id: ID!
         name: String!
         selection: [Selection!]!
     }
 
     type Selection {
-        id: Int!
+        id: ID!
         selectionDate: String!
         totalSelections: Int!
         winningSelections: Int!
         totalBets: Int!
         winningBets: Int!
-        selectionCostWin: Int!
+        selectionCostWin: Boolean!
         user: User!
     }
 
     type Query {
-        user(id: Int!): User
+        user(id: ID!): User
         allUsers: [User!]!
         allSelections: [Selection!]!
-        selection(id: Int!): Selection
+        selection(id: ID!): Selection
     }
 
     type Mutation {
         createUser(name: String!): User!
         createSelection(
-            userId: Int!
+            userId: ID!
             selectionDate: String!
             totalSelections: Int!
             winningSelections: Int!
             totalBets: Int!
             winningBets: Int!
-            selectionCostWin: Int!
+            selectionCostWin: Boolean!
         ): Selection!
     }
 `;

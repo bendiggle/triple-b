@@ -6,11 +6,14 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Layout from "../../components/Layout";
+import Layout from '../../components/Layout';
+import LoadingSpinner from '../../components/LoadingSpinner'
+import Error from '../../components/Error';
 
 const GET_PLAYERS = gql`
     query {
         allUsers {
+            id
             name
         }
     }
@@ -24,6 +27,7 @@ const headers = [
 ];
 
 const createRows = players => players.map(player => ({
+  id: player.id,
   name: player.name,
   totalSelections: 22,
   winPercentage: 59,
@@ -32,10 +36,11 @@ const createRows = players => players.map(player => ({
 
 const Players = () => {
   const { data, loading, error } = useQuery(GET_PLAYERS);
-  let rows = [];
-  if (data) rows = createRows(data.allUsers);
+  if (loading) return <LoadingSpinner />;
+  if (error) return <Error />;
+  const rows = createRows(data.allUsers);
   return (
-    <Layout header="Players" loading={loading} error={error}>
+    <Layout header="Players">
       <Table>
         <TableHead>
           <TableRow>
@@ -44,7 +49,7 @@ const Players = () => {
         </TableHead>
         <TableBody>
           {rows.map(data => (
-            <TableRow key={data.name}>
+            <TableRow key={data.id}>
               <TableCell>{data.name}</TableCell>
               <TableCell>{data.totalSelections}</TableCell>
               <TableCell>{data.winPercentage}</TableCell>

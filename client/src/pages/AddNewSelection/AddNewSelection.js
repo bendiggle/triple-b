@@ -1,78 +1,99 @@
-import React, { useState } from 'react';
-import { Formik, Form } from 'formik';
-import { TextField, Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import React, {useEffect, useState} from 'react';
+import {useMutation, useQuery} from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+import { Button } from '@material-ui/core';
 import Layout from '../../components/Layout';
 import AddSelectionInfo from './components/AddSelectionInfo';
 import AddBetInfo from "./components/AddBetInfo";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import Error from "../../components/Error";
+import AddDate from "./components/AddDate";
 
-const players = [{
-  name: 'BD'
-}, {
-  name: 'SF'
-}, {
-  name: 'LA'
-}, {
-  name: 'JM'
-}];
-
-const setDefaultValues = players => {
-  const blah = {
-    totalBets: '',
-    winningBets: '',
-    playerCostWin: ''
-  };
-  players.forEach(player => {
-    blah[player.name] = {
-      selections: '',
-      winningSelections: ''
+const GET_PLAYERS = gql`
+    query {
+        allUsers {
+            id
+            name
+        }
     }
-  });
-  return blah;
+`;
+
+const CREATE_SELECTION = gql`
+    mutation createSelection($userId: ID!, $selectionDate: String!, $totalSelections: Int!,
+        $winningSelections: Int!, $totalBets: Int!, $winningBets: Int!, $selectionCostWin: Boolean!
+    ) {
+        createSelection(userId: $userId, selectionDate: $selectionDate,
+            totalSelections: $totalSelections, winningSelections: $winningSelections,
+            totalBets: $totalBets, winningBets: $winningBets, selectionCostWin: $selectionCostWin
+        ) {
+            selectionDate,
+            totalSelections
+            winningSelections
+            totalBets
+            winningBets
+            selectionCostWin
+        }
+    }
+`;
+
+const getDefaultValues = players => {
+  const defaultValues = {
+    date: new Date(),
+    selections: [],
+    totalBets: 0,
+    winningBets: 0,
+    selectionCostWin: null
+  };
+  defaultValues.selections = players.map(player => ({
+    userId: player.id,
+    totalSelections: 0,
+    winningSelections: 0
+  }));
+  return defaultValues;
 };
 
 
 const sections = [
-  ({ onChange }) => <AddSelectionInfo onChange={onChange}/>,
-  ({ onChange })=> <AddBetInfo onChange={onChange}/>
+  props => <AddDate {...props} />,
+  props => <AddSelectionInfo {...props} />,
+  props => <AddBetInfo {...props} />
 ];
 
-// ENTER DATE -> DATEPICKER
-// BREADCRUMBS
-// YUP VALIDATION
-
-// SECTIONS = list players and add individually (some might have different selections)
-// ADD void bets (switch)
-// ADD if one bet cost win
-
-// POSSIBLE TO DO MU
-
-
-// Go to Add new Selections
-// 1. add date
-// 2. Displays date -> Add new bet
-// 3. Add bet name
-// 4. DONE - Add Selections and winning selections
-// 5. DONE - Add total bets and total winning bets ANd any slections cost winning bets ( list of all
-
 const AddNewSelection = () => {
-  const [displayForm, setDisplayForm] = useState(false);
+  const { data: players, loading, error } = useQuery(GET_PLAYERS);
+  const [createSelection] = useMutation(CREATE_SELECTION);
   const [sectionNumber, setSectionNumber] = useState(0);
-  const [fieldValues, setFieldValues] = useState(setDefaultValues(players));
+  const [selectionValues, setSelectionValues] = useState(null);
   const Section = sections[sectionNumber];
-  const meow = (value, field) => {
-    console.log('value, field', value, field);
-    const blah = Object.assign({}, fieldValues);
-    blah[field] = value;
-    setFieldValues(blah);
-  };
-  const submitSelections = () => {
-    console.log('SUBMIT', );
-  };
-  console.log('selection Values', fieldValues);
+
+  useEffect(() => {
+    if (players) setSelectionValues(getDefaultValues(players.allUsers));
+  }, [players])
+
+  const submit = async () => {
+    const { date, selections, totalBets, winningBets, selectionCostWin } = selectionValues;
+    const validSelections = selections.filter(selection => selection.totalSelections > 0);
+    const promises = validSelections.map(selection => createSelection({ variables: {
+        userId: parseInt(selection.userId),
+        selectionDate: date,
+        totalSelections: parseInt(selection.totalSelections),
+        winningSelections: parseInt(selection.winningSelections),
+        totalBets: parseInt(totalBets),
+        winningBets: parseInt(winningBets),
+        selectionCostWin: parseInt(selectionCostWin) === parseInt(selection.userId)
+      } }));
+    try {
+      await Promise.all(promises);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <Error />;
   return (
     <Layout header="Add New">
-      <Section onChange={meow}/>
+      <Section setFieldValue={setSelectionValues} values={selectionValues} players={players.allUsers} />
       <div>
         {sectionNumber > 0 && (
           <Button
@@ -96,7 +117,7 @@ const AddNewSelection = () => {
             style={{ float: 'right' }}
             color="primary"
             type="submit"
-            onClick={() => submitSelections()}
+            onClick={() => submit()}
           >
             Submit
           </Button>

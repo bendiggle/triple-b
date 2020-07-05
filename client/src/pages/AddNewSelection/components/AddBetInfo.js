@@ -1,34 +1,15 @@
 import React, { useState } from 'react';
 import { Switch, TextField, RadioGroup, Radio } from "@material-ui/core";
 
-const players = [{
-  name: 'BD'
-}, {
-  name: 'SF'
-}, {
-  name: 'LA'
-}, {
-  name: 'JM'
-}];
-
-const setDefaultFieldValues = () => ({
-  totalBets: '',
-  winningBets: '',
-  playerCostWin: ''
-});
-
-const AddBetInfo = ({ onChange }) => {
+const AddBetInfo = ({ setFieldValue, values, players }) => {
   const [displaySingleSelectionField, setDisplaySingleSelectionField] = useState(false);
-  const [fieldValues, setFieldValues] = useState(setDefaultFieldValues());
 
-  const setFieldValue = (field, value) => {
-    const meow = Object.assign({}, fieldValues);
-    meow[field] = value;
-    setFieldValues(meow);
-    onChange(meow);
+  const onChange = (field, value) => {
+    setFieldValue({
+      ...values,
+      [field]: value
+    });
   };
-
-  console.log(fieldValues);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -37,7 +18,7 @@ const AddBetInfo = ({ onChange }) => {
         name="totalBets"
         label="Enter total bets"
         type="number"
-        onChange={e => setFieldValue('totalBets', e.target.value)}
+        onChange={e => onChange('totalBets', e.target.value)}
         style={{ width: '100%' }}
       />
       <TextField
@@ -45,18 +26,12 @@ const AddBetInfo = ({ onChange }) => {
         name="winningBets"
         label="Enter winning bets"
         type="number"
-        onChange={e => setFieldValue('winningBets', e.target.value)}
+        onChange={e => onChange('winningBets', e.target.value)}
         style={{ width: '100%' }}
       />
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
         <p>Single selection cost win?</p>
-        <Switch onChange={e => {
-          if (e.target.checked) setDisplaySingleSelectionField(e.target.checked);
-          else {
-            setFieldValue('playerCostWin', '');
-            setDisplaySingleSelectionField(e.target.checked)
-          }
-        }}/>
+        <Switch onChange={e => setDisplaySingleSelectionField(e.target.checked)} />
       </div>
       {displaySingleSelectionField && (
         <RadioGroup>
@@ -68,10 +43,10 @@ const AddBetInfo = ({ onChange }) => {
               <p>{player.name}</p>
               <Radio
                 onChange={e => {
-                  if (e.target.checked) setFieldValue('playerCostWin', player.name);
-                  else setFieldValue('playerCostWin', '')
+                  if (e.target.checked) onChange('selectionCostWin', player.id);
+                  else onChange('selectionCostWin', null)
                 }}
-                checked={fieldValues.playerCostWin === player.name}
+                checked={values.selectionCostWin === player.id}
               />
             </div>
           ))}

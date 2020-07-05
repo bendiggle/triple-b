@@ -9,7 +9,6 @@ import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
 import faUsers from '@fortawesome/fontawesome-free-solid/faUsers';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Container from '@material-ui/core/Container';
-import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Icon = styled(FontAwesomeIcon)({
   fontSize: '24px',
@@ -26,11 +25,6 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     zIndex: 1000
-  },
-  loadingSpinner: {
-    position: 'absolute',
-    top: 'calc(50% - 20px)',
-    left: 'calc(50% - 20px)'
   }
 });
 
@@ -40,15 +34,10 @@ const navItems = [
   { label: 'Reports', value: '/reports', icon: <Icon icon={faChartPie} />},
 ];
 
-const Layout = ({ header, children, loading, error }) => {
+const Layout = ({ header, children }) => {
   const history = useHistory();
   const location = useLocation();
   const classes = useStyles();
-  const renderChildren = () => {
-    if (loading) return <CircularProgress className={classes.loadingSpinner} color="secondary" />;
-    if (error) return <div>Error</div>;
-    return children;
-  };
   return (
     <div>
       <AppBar className={classes.header} position="static">
@@ -56,7 +45,7 @@ const Layout = ({ header, children, loading, error }) => {
       </AppBar>
       <Container className={classes.mainContent}>
         <Typography variant="h2" className={classes.pageHeading}>{header}</Typography>
-        {renderChildren()}
+        {children}
       </Container>
       <div>
         <BottomNavigation

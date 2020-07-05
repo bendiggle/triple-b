@@ -9,12 +9,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
+        allowNull: false,
         type: Sequelize.INTEGER.UNSIGNED,
-        allowNull: false
+        references: {
+          model: 'Users',
+          key: 'id'
+        },
       },
       selectionDate: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       totalSelections: {
         allowNull: false,
@@ -34,7 +38,7 @@ module.exports = {
       },
       selectionCostWin: {
         allowNull: false,
-        type: Sequelize.INTEGER
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

@@ -1,0 +1,36 @@
+USER
+
+CREATING A USER:
+mutation {
+  createUser(name: "Ben") {
+    name
+  }
+}
+
+GETTING ALL USERS:
+query {
+  allUsers{
+    id
+    name
+  }
+}
+
+GET A USER
+query {
+  user(id: 1){
+    id
+    name
+  }
+}
+
+CREATING A SELECTION
+mutation {
+  createSelection(userId: 1, selectionDate: "05/07/2020", totalSelections: 1, winningSelections: 1, totalBets: 1, winningBets: 1, selectionCostWin: false) {
+    selectionDate
+    totalSelections
+    winningSelections
+    totalBets
+    winningBets
+    selectionCostWin
+  }
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Switch } from '@material-ui/core';
-import {unit} from "../../../theme";
 import { makeStyles } from "@material-ui/core/styles";
+import { unit } from '../../../theme';
 
 const useStyles = makeStyles({
   textInput: {
@@ -10,41 +10,17 @@ const useStyles = makeStyles({
   }
 });
 
-const players = [{
-  name: 'BD'
-}, {
-  name: 'SF'
-}, {
-  name: 'LA'
-}, {
-  name: 'JM'
-}];
-
 const setDefaultDisplay = players => {
-  const blah = {};
+  const defaultDisplay = {};
   players.forEach(player => {
-    blah[player.name] = false
+    defaultDisplay[player.id] = false
   });
-  return blah;
+  return defaultDisplay;
 };
 
-const setDefaultValues = players => {
-  const blah = {};
-  players.forEach(player => {
-    blah[player.name] = {
-      selections: '',
-      winningSelections: ''
-    }
-  });
-  return blah;
-};
-
-const AddSelectionInfo = ({ onChange }) => {
+const AddSelectionInfo = ({ setFieldValue, values, players }) => {
   const classes = useStyles();
   const [displayFields, setDisplayFields] = useState(setDefaultDisplay(players));
-  const [fieldValues, setFieldValues] = useState(setDefaultValues(players));
-
-  console.log(displayFields);
 
   const setDisplayField = (player, display) => {
     const meow = Object.assign({}, displayFields);
@@ -52,14 +28,15 @@ const AddSelectionInfo = ({ onChange }) => {
     setDisplayFields(meow);
   };
 
-  const setFieldValue = (player, field, value) => {
-    const meow = Object.assign({}, fieldValues);
-    meow[player][field] = value;
-    setFieldValues(meow);
-    onChange(meow[player], player);
+  const onChange = (userId, field, value) => {
+    const newValues = values.selections.slice();
+    const index = newValues.findIndex(selection => selection.userId === userId);
+    newValues[index][field] = value;
+    setFieldValue({
+      ...values,
+      selections: newValues
+    });
   };
-
-  console.log('values', fieldValues);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -70,31 +47,29 @@ const AddSelectionInfo = ({ onChange }) => {
         >
           <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <p>{player.name}</p>
-            <Switch onChange={e => setDisplayField(player.name, e.target.checked)}/>
+            <Switch onChange={e => setDisplayField(player.id, e.target.checked)}/>
           </div>
           <div style={{ marginBottom: unit(2) }}>
-            {displayFields[player.name] && (
+            {displayFields[player.id] && (
               <>
                 <TextField
                   className={classes.textInput}
-                  id={`${player.name}-totalSelections`}
-                  name={`${player.name}-totalSelections`}
+                  id={`${player.id}-totalSelections`}
+                  name={`${player.id}-totalSelections`}
                   label={`Enter selections`}
                   type="number"
                   onChange={e => {
-                    console.log(e.target.value);
-                    setFieldValue(player.name, 'selections', e.target.value);
+                    onChange(player.id, 'totalSelections', e.target.value);
                   }}
                 />
                 <TextField
                   className={classes.textInput}
-                  id={`${player.name}-winningSelections`}
-                  name={`${player.name}-winningSelections`}
+                  id={`${player.id}-winningSelections`}
+                  name={`${player.id}-winningSelections`}
                   label={`Enter winning selections`}
                   type="number"
                   onChange={e => {
-                    console.log(e.target.value);
-                    setFieldValue(player.name, 'winningSelections', e.target.value);
+                    onChange(player.id, 'winningSelections', e.target.value);
                   }}
                 />
               </>

@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     selectionCostWin: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.BOOLEAN,
       allowNull: false
     }
   }, {});
