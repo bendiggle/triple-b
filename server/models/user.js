@@ -4,6 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    nickName: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {});
   Users.associate = function(models) {
