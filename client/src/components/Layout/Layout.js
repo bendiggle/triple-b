@@ -1,21 +1,29 @@
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { AppBar, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import faChartPie from '@fortawesome/fontawesome-free-solid/faChartPie';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
+import faUserCircle from '@fortawesome/fontawesome-free-solid/faUserCircle';
+import faBell from '@fortawesome/fontawesome-free-solid/faBell';
 import faUsers from '@fortawesome/fontawesome-free-solid/faUsers';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Container from '@material-ui/core/Container';
 
 const Icon = styled(FontAwesomeIcon)({
   fontSize: '24px',
-  color: 'white'
+  color: 'inherit'
 });
 
 const useStyles = makeStyles({
+  title: {
+    width: '100%'
+  },
+  iconButtons: {
+    display: 'flex'
+  },
   pageHeading: {
     fontSize: '2.5rem'
   },
@@ -25,6 +33,10 @@ const useStyles = makeStyles({
     left: 0,
     right: 0,
     zIndex: 1000
+  },
+  navigationAction : {
+    paddingTop: '6px !important',
+    color: 'white'
   }
 });
 
@@ -40,8 +52,14 @@ const Layout = ({ header, children }) => {
   const classes = useStyles();
   return (
     <div>
-      <AppBar className={classes.header} position="static">
-        <Typography variant="h1">Triple-B</Typography>
+      <AppBar position="static">
+        <Toolbar>
+          <Typography className={classes.title} variant="h5">Triple-B</Typography>
+          <div className={classes.iconButtons}>
+            <IconButton><Icon icon={faBell} size="lg"/></IconButton>
+            <IconButton><Icon icon={faUserCircle}/></IconButton>
+          </div>
+        </Toolbar>
       </AppBar>
       <Container className={classes.mainContent}>
         <Typography variant="h2" className={classes.pageHeading}>{header}</Typography>
@@ -55,10 +73,9 @@ const Layout = ({ header, children }) => {
         >
           {navItems.map(item => (
             <BottomNavigationAction
-              label={item.label}
+              className={classes.navigationAction}
               value={item.value}
               icon={item.icon}
-              showLabel={false}
             />
           ))}
         </BottomNavigation>
