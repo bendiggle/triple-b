@@ -4,6 +4,7 @@ const typeDefs = gql`
     type User {
         id: ID!
         name: String!
+        nickName: String
         selection: [Selection!]!
     }
 
@@ -23,10 +24,11 @@ const typeDefs = gql`
         allUsers: [User!]!
         allSelections: [Selection!]!
         selection(id: ID!): Selection
+        selectionsByUser(userId: ID!): [Selection!]!
     }
 
     type Mutation {
-        createUser(name: String!): User!
+        createUser(name: String!, nickName: String): User!
         createSelection(
             userId: ID!
             selectionDate: String!

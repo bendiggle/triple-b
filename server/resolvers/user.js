@@ -10,8 +10,8 @@ module.exports = {
     },
   },
   Mutation: {
-    createUser: async (parent, { name }, { models: { userModel } }, info) => {
-      const user = await userModel.create({ name });
+    createUser: async (parent, { name, nickName }, { models: { userModel } }, info) => {
+      const user = await userModel.create({ name, nickName });
       return user;
     },
   }
