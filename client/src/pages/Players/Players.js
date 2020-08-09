@@ -1,5 +1,5 @@
-import React from 'react';
-import { useQuery } from '@apollo/react-hooks';
+import React, { useEffect, useState } from 'react';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
 import { gql } from 'apollo-boost';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -19,6 +19,21 @@ const GET_PLAYERS = gql`
     }
 `;
 
+const GET_SELECTIONS_BY_PLAYER = gql`
+    query selectionsByUser($userId: ID!) {
+        selectionsByUser(userId: $userId) {
+            id
+            user {
+                id
+                name
+            }
+            totalSelections
+            winningSelections
+            selectionCostWin
+        }
+    }
+`;
+
 const headers = [
   'Player',
   'Selections',
@@ -26,19 +41,58 @@ const headers = [
   'Let down'
 ];
 
-const createRows = players => players.map(player => ({
-  id: player.id,
-  name: player.name,
-  totalSelections: 22,
-  winPercentage: 59,
-  lostByOne: 3
-}));
+const getTotalSelectionsForPlayer = (selections) => {
+  let totalSelections = 0;
+  selections.forEach(selection => {
+    totalSelections += selection.totalSelections;
+  });
+  return totalSelections;
+};
+
+const getWinPercentageForPlayer = (selections, totalSelections) => {
+  let winningSelections = 0;
+  selections.forEach(selection => {
+    winningSelections += selection.winningSelections;
+  });
+  const percentage = (winningSelections / totalSelections) * 100;
+  return `${percentage.toFixed(1)}%`;
+}
+
+const getTotalLetDowns = (selections) =>
+  selections.filter(selection => selection.selectionCostWin).length
+
+const formatSelectionData = (selections) => {
+  const totalSelections = getTotalSelectionsForPlayer(selections);
+  const winPercentage = getWinPercentageForPlayer(selections, totalSelections);
+  const lostByOne = getTotalLetDowns(selections);
+  return { ...selections[0].user, totalSelections, winPercentage, lostByOne };
+}
 
 const Players = () => {
-  const { data, loading, error } = useQuery(GET_PLAYERS);
-  if (loading) return <LoadingSpinner />;
+  const client = useApolloClient();
+  const [rows, setRows] = useState([]);
+  const { data: playersData, loading, error } = useQuery(GET_PLAYERS);
+
+  useEffect(() => {
+    if (playersData) {
+      const getSelectionByPlayer = async userId => {
+        const { data: selectionData } = await client.query({
+          query: GET_SELECTIONS_BY_PLAYER,
+          variables: { userId },
+        });
+        return selectionData;
+      }
+      const promises = playersData.allUsers.map(player => getSelectionByPlayer(player.id));
+      Promise.all(promises).then(values => {
+        const selections = values.map(value => formatSelectionData(value.selectionsByUser));
+        setRows(selections);
+      });
+    }
+  }, [playersData, client]);
+
+
+  if (loading || !rows.length > 0) return <LoadingSpinner />;
   if (error) return <Error />;
-  const rows = createRows(data.allUsers);
   return (
     <Layout header="Players">
       <Table>
@@ -48,12 +102,12 @@ const Players = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map(data => (
-            <TableRow key={data.id}>
-              <TableCell>{data.name}</TableCell>
-              <TableCell>{data.totalSelections}</TableCell>
-              <TableCell>{data.winPercentage}</TableCell>
-              <TableCell>{data.lostByOne}</TableCell>
+          {rows.map(row => (
+            <TableRow key={row.id}>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.totalSelections}</TableCell>
+              <TableCell>{row.winPercentage}</TableCell>
+              <TableCell>{row.lostByOne}</TableCell>
             </TableRow>
           ))}
         </TableBody>
