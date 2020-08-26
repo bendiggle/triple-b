@@ -21,7 +21,7 @@ const App = () => {
             main: '#03DAC5'
           },
           background: {
-            default: '#121212'
+            default: '#212121'
           },
           contrastThreshold: 3,
           tonalOffset: 0.2
