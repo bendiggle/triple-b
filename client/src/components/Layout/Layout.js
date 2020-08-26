@@ -3,6 +3,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Link from '@material-ui/core/Link';
 import { makeStyles, styled } from '@material-ui/core/styles';
 import faChartPie from '@fortawesome/fontawesome-free-solid/faChartPie';
 import faPlusCircle from '@fortawesome/fontawesome-free-solid/faPlusCircle';
@@ -34,9 +36,12 @@ const useStyles = makeStyles({
     right: 0,
     zIndex: 1000
   },
-  navigationAction : {
+  navigationAction: {
     paddingTop: '6px !important',
     color: 'white'
+  },
+  breadcrumbs: {
+    margin: '6px 0'
   }
 });
 
@@ -46,7 +51,7 @@ const navItems = [
   { label: 'Reports', value: '/reports', icon: <Icon icon={faChartPie} />},
 ];
 
-const Layout = ({ header, children }) => {
+const Layout = ({ header, breadcrumbs, children }) => {
   const history = useHistory();
   const location = useLocation();
   const classes = useStyles();
@@ -62,7 +67,21 @@ const Layout = ({ header, children }) => {
         </Toolbar>
       </AppBar>
       <Container className={classes.mainContent}>
-        <Typography variant="h2" className={classes.pageHeading}>{header}</Typography>
+        {header && <Typography variant="h5" className={classes.pageHeading}>{header}</Typography>}
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <div className={classes.breadcrumbs}>
+            <Breadcrumbs>
+              {breadcrumbs.map(breadcrumb => (
+                <Link
+                  color={breadcrumb.active ? 'primary' : 'inherit'}
+                  href={breadcrumb.href}
+                >
+                  {breadcrumb.text}
+                </Link>
+              ))}
+            </Breadcrumbs>
+          </div>
+        )}
         {children}
       </Container>
       <div>
@@ -73,6 +92,7 @@ const Layout = ({ header, children }) => {
         >
           {navItems.map(item => (
             <BottomNavigationAction
+              key={item.label}
               className={classes.navigationAction}
               value={item.value}
               icon={item.icon}

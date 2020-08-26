@@ -9,6 +9,11 @@ import TableRow from '@material-ui/core/TableRow';
 import Layout from '../../components/Layout';
 import LoadingSpinner from '../../components/LoadingSpinner'
 import Error from '../../components/Error';
+import {
+  getTotalSelectionsForPlayer,
+  getWinPercentageForPlayer,
+  getTotalLetDowns
+} from '../../utils/calculations';
 
 const GET_PLAYERS = gql`
     query {
@@ -41,27 +46,7 @@ const headers = [
   'Let down'
 ];
 
-const getTotalSelectionsForPlayer = (selections) => {
-  let totalSelections = 0;
-  selections.forEach(selection => {
-    totalSelections += selection.totalSelections;
-  });
-  return totalSelections;
-};
-
-const getWinPercentageForPlayer = (selections, totalSelections) => {
-  let winningSelections = 0;
-  selections.forEach(selection => {
-    winningSelections += selection.winningSelections;
-  });
-  const percentage = (winningSelections / totalSelections) * 100;
-  return `${percentage.toFixed(1)}%`;
-}
-
-const getTotalLetDowns = (selections) =>
-  selections.filter(selection => selection.selectionCostWin).length
-
-const formatSelectionData = (selections) => {
+const formatSelectionData = selections => {
   const totalSelections = getTotalSelectionsForPlayer(selections);
   const winPercentage = getWinPercentageForPlayer(selections, totalSelections);
   const lostByOne = getTotalLetDowns(selections);
