@@ -8,5 +8,8 @@
     "start:client": "cd client && yarn start",
     "heroku-prebuild": "yarn start:server",
     "heroku-postbuild": "yarn start:client"
+  },
+  "engines": {
+    "yarn": "1.16.0"
   }
 }
