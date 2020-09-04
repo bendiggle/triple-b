@@ -1,0 +1,12 @@
+{
+  "name": "triple-b",
+  "description": "Wrapper for frontend to allow Heroku builds.",
+  "version": "1.0.1",
+  "dependencies": {},
+  "scripts": {
+    "start:server": "cd server && node index.js",
+    "start:client": "cd client && yarn start",
+    "heroku-prebuild": "yarn start:server",
+    "heroku-postbuild": "yarn start:client"
+  }
+}
