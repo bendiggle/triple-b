@@ -4,7 +4,7 @@
   "version": "1.0.1",
   "dependencies": {},
   "scripts": {
-    "start": "cd server && node index.js",
+    "start": "cd server && yarn && node index.js",
     "heroku-postbuild": "cd client && yarn && yarn run build"
   },
   "engines": {
