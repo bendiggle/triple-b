@@ -4,10 +4,10 @@
   "version": "1.0.1",
   "dependencies": {},
   "scripts": {
-    "start:server": "cd server && node index.js",
-    "start:client": "cd client && yarn start",
-    "heroku-prebuild": "yarn start:server",
-    "heroku-postbuild": "yarn start:client"
+    "start:server": "cd server && yarn && node index.js",
+    "start:client": "cd client && yarn && yarn start",
+    "heroku-prebuild": "yarn && yarn start:server",
+    "heroku-postbuild": "yarn yarn start:client"
   },
   "engines": {
     "yarn": "1.16.0"
