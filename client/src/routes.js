@@ -2,9 +2,12 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { AddNewSelection, Players, Reports, WinPercentage } from './pages';
 
+const TestRootComponent = <div>ROOT!!!!!!</div>
+
 const Routes = () => (
   <BrowserRouter>
     <Switch>
+      <Route path="/" component={TestRootComponent} exact/>
       <Route path="/add-new-selections" component={AddNewSelection} exact/>
       <Route path="/players" component={Players} exact/>
       <Route path="/reports" component={Reports} exact/>
