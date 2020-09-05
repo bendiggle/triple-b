@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import { AddNewSelection, Players, Reports, WinPercentage } from './pages';
 
-const TestRootComponent = <div>ROOT!!!!!!</div>
+const TestRootComponent = () => <div>ROOT!!!!!!</div>
 
 const Routes = () => (
   <BrowserRouter>
