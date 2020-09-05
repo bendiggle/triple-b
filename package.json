@@ -12,8 +12,7 @@
       "server",
       "client"
     ],
-    "nohoist": [
-    ]
+    "nohoist": []
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
