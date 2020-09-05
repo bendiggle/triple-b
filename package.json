@@ -1,0 +1,20 @@
+{
+  "name": "triple-b",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {},
+  "engines": {
+    "node": "11.15.0",
+    "yarn": "1.16.0"
+  },
+  "workspaces": {
+    "packages": [
+      "server",
+      "client"
+    ],
+    "nohoist": [
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
