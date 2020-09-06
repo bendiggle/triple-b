@@ -16,6 +16,9 @@ const server = new ApolloServer({
   context: { models }
 });
 
+models.sequelize.authenticate();
+models.sequelize.sync();
+
 server
   .listen()
   .then(({ url }) => console.log(`🚀 Server is running on ${url}`));
