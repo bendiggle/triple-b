@@ -12,6 +12,9 @@ console.log(BACKEND_URL);
 
 const client = new ApolloClient({
   uri: `${BACKEND_URL}/graphql`,
+  fetchOptions: {
+    mode: 'no-cors',
+  }
 });
 
 const App = () => {
