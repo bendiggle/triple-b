@@ -13,7 +13,8 @@ app.use(cors());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: { models }
+  context: { models },
+  debug: true
 });
 
 // models.sequelize.authenticate();
