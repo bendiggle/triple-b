@@ -1,8 +1,8 @@
 import React from 'react';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import './App.css';
-import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import Routes from './routes';
 
@@ -12,6 +12,7 @@ console.log(BACKEND_URL);
 
 const client = new ApolloClient({
   uri: `${BACKEND_URL}/graphql`,
+  cache: new InMemoryCache(),
   fetchOptions: {
     mode: 'no-cors',
   }
