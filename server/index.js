@@ -14,7 +14,7 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: { models },
-  debug: true
+  introspection: true
 });
 
 // models.sequelize.authenticate();
