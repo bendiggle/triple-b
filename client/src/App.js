@@ -6,9 +6,7 @@ import './App.css';
 import { ApolloProvider } from '@apollo/react-hooks';
 import Routes from './routes';
 
-const BACKEND_URL = process.env.BACKEND_URL || 'https://triple-b-server.herokuapp.com'
-
-console.log(BACKEND_URL);
+const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:4000'
 
 const client = new ApolloClient({
   uri: `${BACKEND_URL}/graphql`,
