@@ -5,7 +5,8 @@ import {
   Players,
   Reports,
   WinPercentage,
-  TeamForm
+  TeamForm,
+  IndividualForm
 } from './pages';
 
 const TestRootComponent = () => <div>ROOT!!!!!!</div>
@@ -19,6 +20,7 @@ const Routes = () => (
       <Route path="/reports" component={Reports} exact/>
       <Route path="/reports/win-percentage" component={WinPercentage} exact/>
       <Route path="/reports/team-form" component={TeamForm} exact/>
+      <Route path="/reports/individual-form" component={IndividualForm} exact/>
     </Switch>
   </BrowserRouter>
 );

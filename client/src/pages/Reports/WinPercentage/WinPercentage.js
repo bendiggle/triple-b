@@ -144,11 +144,6 @@ const WinPercentage = () => {
           enableLabel={false}
           animate={true}
           theme={{
-            grid: {
-              line: {
-                stroke: 'red'
-              }
-            },
             axis: {
               ticks: {
                 line: {

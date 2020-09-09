@@ -4,6 +4,8 @@ import { useQuery } from '@apollo/react-hooks';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import moment from 'moment';
 import { ResponsiveLine } from '@nivo/line';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import faUserFriends from '@fortawesome/fontawesome-free-solid/faUserFriends';
 import Layout from '../../../components/Layout';
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import Error from '../../../components/Error';
@@ -21,6 +23,13 @@ const GET_ALL_SELECTIONS = gql`
 `;
 
 const useStyles = makeStyles({
+  averageFormStat: {
+    marginTop: '24px'
+  },
+  statString: {
+    marginLeft: '6px',
+    fontSize: '1rem'
+  },
   lineContainer: {
     height: '500px'
   }
@@ -44,6 +53,14 @@ const formatData = (selections) => {
   return [data];
 }
 
+const getAverageForm = (formData) => {
+  const allPercentages = formData
+    .map(d => d.y)
+    .reduce((a, b) => a + b);
+  const average = allPercentages / formData.length;
+  return `Average Team Form is ${average.toFixed(1)}%`;
+}
+
 const TeamForm = () => {
   const theme = useTheme();
   const classes = useStyles();
@@ -60,6 +77,10 @@ const TeamForm = () => {
         { text: 'Team Form', href: '/reports/team-form', active: true }
       ]}
     >
+      <div className={classes.averageFormStat}>
+        <FontAwesomeIcon icon={faUserFriends}size="lg" />
+        <span className={classes.statString}>{getAverageForm(lines[0].data)}</span>
+      </div>
       <div className={classes.lineContainer}>
         <ResponsiveLine
           height={400}
