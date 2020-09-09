@@ -1,6 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import { AddNewSelection, Players, Reports, WinPercentage } from './pages';
+import {
+  AddNewSelection,
+  Players,
+  Reports,
+  WinPercentage,
+  TeamForm
+} from './pages';
 
 const TestRootComponent = () => <div>ROOT!!!!!!</div>
 
@@ -12,6 +18,7 @@ const Routes = () => (
       <Route path="/players" component={Players} exact/>
       <Route path="/reports" component={Reports} exact/>
       <Route path="/reports/win-percentage" component={WinPercentage} exact/>
+      <Route path="/reports/team-form" component={TeamForm} exact/>
     </Switch>
   </BrowserRouter>
 );

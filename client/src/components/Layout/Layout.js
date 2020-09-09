@@ -73,6 +73,7 @@ const Layout = ({ header, breadcrumbs, children }) => {
             <Breadcrumbs>
               {breadcrumbs.map(breadcrumb => (
                 <Link
+                  key={breadcrumb.href}
                   color={breadcrumb.active ? 'primary' : 'inherit'}
                   href={breadcrumb.href}
                 >

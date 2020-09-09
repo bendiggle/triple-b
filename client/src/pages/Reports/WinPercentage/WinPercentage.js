@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql } from 'apollo-boost';
 import { useApolloClient, useQuery } from '@apollo/react-hooks';
 import { ResponsiveBar } from '@nivo/bar'
@@ -107,10 +107,12 @@ const WinPercentage = () => {
   if (loading || !bars.length > 0) return <LoadingSpinner />;
   if (error) return <Error />;
   return (
-    <Layout breadcrumbs={[
-      { text: 'Reports', href: '/reports', active: false },
-      { text: 'Win Percentage', href: '/reports/win-percentage', active: true }
-    ]}>
+    <Layout
+      breadcrumbs={[
+        { text: 'Reports', href: '/reports', active: false },
+        { text: 'Win Percentage', href: '/reports/win-percentage', active: true }
+      ]}
+    >
       <div className={classes.bestPlayerStat}>
         <FontAwesomeIcon icon={faTrophy}size="lg" />
         <span className={classes.statString}>{displayBestPlayerAndScore()}</span>
@@ -142,6 +144,11 @@ const WinPercentage = () => {
           enableLabel={false}
           animate={true}
           theme={{
+            grid: {
+              line: {
+                stroke: 'red'
+              }
+            },
             axis: {
               ticks: {
                 line: {
