@@ -35,7 +35,7 @@ const useStyles = makeStyles({
   }
 });
 
-const formatData = (selections) => {
+const formatData = selections => {
   const data = {
     id: 'teamForm',
     data: Object.keys(selections).map(selection => {
