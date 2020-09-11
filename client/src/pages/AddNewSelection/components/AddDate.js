@@ -4,6 +4,8 @@ import DateFnsUtils from '@date-io/date-fns';
 
 
 const AddDate = ({ setFieldValue, values }) => {
+  console.log(values);
+  console.log('MEOW');
   return (
     <div>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -14,7 +16,7 @@ const AddDate = ({ setFieldValue, values }) => {
             margin="normal"
             id="select-date"
             label="Select date"
-            value={new Date()}
+            value={values && values.date ? values.date : new Date()}
             onChange={value => {
               setFieldValue({
                 ...values,
